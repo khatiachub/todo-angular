@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="container-header">
+    <h2 class="header-title">T o - D o   List</h2>
+  </div>
+  <div class="announcement">
+    <h4 class="announcement-title">შ ე ტ ყ ო ბ ი ნ ე ბ ა !</h4>
+    <p class="announcement-text">სამწუხაროდ დამატებული დავალებები ჯერ არ მოიძებნება. </p>
+  </div>
+
+
+  <form class="form">
+    <div (click)="addTask()" class="form-addnew">
+      <img src="../assets/images/docs_add_on_FILL0_wght400_GRAD0_opsz24 1.png"/>
+      <p class="add-new-task">ახალი დავალების დამატება</p>
+    </div>
+    <div *ngIf="open" class="form-inputs">
+      <div class="name-input-wraper">
+        <label class="label">შეიყვანეთ დასახელება</label>
+        <input class="name-input" type="text"/>
+      </div>
+    <select class="select" name="" id="">
+      <option>mindinare</option>
+      <option>dasruebul</option>
+    </select>
+    <button class="button">+ დამატება</button>
+    </div>
+  </form>
+
+</div>
