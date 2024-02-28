@@ -61,6 +61,7 @@
   align-items: center;
   height: 200px;
   justify-content: space-between;
+  margin: 0 auto;
 }
 .form-inputs {
   display: flex;
