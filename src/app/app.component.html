@@ -1,29 +1,217 @@
-<div class="container">
-  <div class="container-header">
-    <h2 class="header-title">T o - D o   List</h2>
+<div class="parent">
+  <div class="child">
+    <h2 class="header-title">T o - D o List</h2>
   </div>
-  <div class="announcement">
+  <div
+    *ngIf="completeTaskArray.length === 0 && currentTaskArray.length === 0"
+    class="announcement"
+  >
     <h4 class="announcement-title">შ ე ტ ყ ო ბ ი ნ ე ბ ა !</h4>
-    <p class="announcement-text">სამწუხაროდ დამატებული დავალებები ჯერ არ მოიძებნება. </p>
+    <p class="announcement-text">
+      სამწუხაროდ დამატებული დავალებები ჯერ არ მოიძებნება.
+    </p>
   </div>
+  <form [formGroup]="form" class="form" (ngSubmit)="sendData()">
+    <div [ngStyle]="containerStyle" class="form-wraper">
+      <div class="form-addnew">
+        <img
+          *ngIf="!edited"
+          src="../assets/images/docs_add_on_FILL0_wght400_GRAD0_opsz24 1.png"
+        />
+        <img
+          *ngIf="edited"
+          src="../assets/images/edit_FILL0_wght400_GRAD0_opsz24 7.png"
+        />
+        <p *ngIf="edited" class="add-new-task">დავალების რედაქტირება</p>
 
-
-  <form class="form">
-    <div (click)="addTask()" class="form-addnew">
-      <img src="../assets/images/docs_add_on_FILL0_wght400_GRAD0_opsz24 1.png"/>
-      <p class="add-new-task">ახალი დავალების დამატება</p>
-    </div>
-    <div *ngIf="open" class="form-inputs">
-      <div class="name-input-wraper">
-        <label class="label">შეიყვანეთ დასახელება</label>
-        <input class="name-input" type="text"/>
+        <p *ngIf="!edited" class="add-new-task">ახალი დავალების დამატება</p>
       </div>
-    <select class="select" name="" id="">
-      <option>mindinare</option>
-      <option>dasruebul</option>
-    </select>
-    <button class="button">+ დამატება</button>
+      <div [ngStyle]="customStyle" class="form-inputs">
+        <div class="name-input-wraper">
+          <label class="label">შეიყვანეთ დასახელება</label>
+          <ng-container *ngIf="filteredArray && edited">
+            <input
+              [ngStyle]="customInputClass"
+              *ngFor="let task of filteredArray"
+              formControlName="taskName"
+              class="name-input"
+              type="text"
+              [(ngModel)]="task.taskName"
+            />
+          </ng-container>
+          <input
+            [ngStyle]="customInputClass"
+            *ngIf="!edited"
+            formControlName="taskName"
+            class="name-input"
+            type="text"
+            [(ngModel)]="inputNameValue"
+          />
+          <!-- <div style="color: red;" *ngIf="name?.status==='INVALID' &&name?.touched">სავალდებულო ველი</div> -->
+        </div>
+
+        <div *ngIf="filteredArray && edited">
+          <div
+            class="custom-dropdown"
+            *ngFor="let task of filteredArray"
+            (click)="toggleDropdown()"
+          >
+            <img
+              class="arrow-img"
+              src="../assets/images/expand_more_FILL0_wght400_GRAD0_opsz24 3.png"
+            />
+            <div class="selected-option">{{ statusValue }}</div>
+            <div class="options" *ngIf="isDropdownOpen">
+              <div
+                class="option"
+                (click)="selectOption('მიმდინარე სტატუსი')"
+                style="color: #ffdf8c"
+              >
+                <p class="status-text">მიმდინარე სტატუსი</p>
+                <img
+                  class="select-img"
+                  *ngIf="task.taskStatus === 'მიმდინარე სტატუსი'"
+                  src="../assets/images/expand_more_FILL0_wght400_GRAD0_opsz24 4.png"
+                />
+              </div>
+              <div
+                class="option"
+                (click)="selectOption('დასრულებული სტატუსი')"
+                style="color: #8ff4db"
+              >
+                <p class="status-text">დასრულებული სტატუსი</p>
+                <img
+                  class="select-img"
+                  *ngIf="task.taskStatus === 'დასრულებული სტატუსი'"
+                  src="../assets/images/expand_more_FILL0_wght400_GRAD0_opsz24 2.png"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!edited">
+          <div
+            [ngStyle]="customSelectClass"
+            class="custom-dropdown"
+            (click)="toggleDropdown()"
+          >
+            <img
+              class="arrow-img"
+              src="../assets/images/expand_more_FILL0_wght400_GRAD0_opsz24 3.png"
+            />
+            <div class="selected-option">{{ statusValue }}</div>
+            <div class="options" *ngIf="isDropdownOpen">
+              <div
+                class="option"
+                (click)="selectOption('მიმდინარე სტატუსი')"
+                style="color: #ffdf8c"
+              >
+                <p>მიმდინარე სტატუსი</p>
+                <img
+                  class="select-img"
+                  *ngIf="status?.value === 'მიმდინარე სტატუსი'"
+                  src="../assets/images/expand_more_FILL0_wght400_GRAD0_opsz24 4.png"
+                />
+              </div>
+              <div
+                class="option"
+                (click)="selectOption('დასრულებული სტატუსი')"
+                style="color: #8ff4db"
+              >
+                <p>დასრულებული სტატუსი</p>
+                <img
+                  class="select-img"
+                  *ngIf="status?.value === 'დასრულებული სტატუსი'"
+                  src="../assets/images/expand_more_FILL0_wght400_GRAD0_opsz24 2.png"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- <div style="color: red;" *ngIf="name?.status==='INVALID' &&name?.touched">სავალდებულო ველი</div> -->
+        </div>
+        <button *ngIf="!edited" type="submit" class="buttondiv">
+          + დამატება
+        </button>
+        <div *ngIf="edited" class="buttondiv">
+          <img src="../assets/images/edit_FILL0_wght400_GRAD0_opsz24 1.png" />
+          <button
+            class="button"
+            *ngFor="let task of filteredArray"
+            type="button"
+            [disabled]="form.invalid"
+            (click)="updateTask(task.id)"
+          >
+            რედაქტირება
+          </button>
+        </div>
+      </div>
     </div>
   </form>
 
+  <table *ngIf="completeTaskArray.length > 0 || currentTaskArray.length > 0">
+    <thead>
+      <tr class="table-header">
+        <th class="task-status">
+          <img
+            src="../assets/images/double_arrow_FILL0_wght400_GRAD0_opsz24 1.png"
+          />
+          <p style="margin-left: 10px">მიმდინარე დავალებები</p>
+        </th>
+        <th>სტატუსი</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table-row" *ngFor="let task of currentTaskArray">
+        <td>{{ task.taskName }}</td>
+        <td style="color: #ffdf8c">{{ task.taskStatus.split(" ")[0] }}</td>
+        <td class="buttons-box">
+          <div
+            [style.background]="changeColor(task.id)"
+            class="edit-box"
+            (click)="editTask(task.id)"
+          >
+            <img src="../assets/images/edit_FILL0_wght400_GRAD0_opsz24 1.png" />
+          </div>
+          <button class="addbutton" (click)="deleteTask(task.id)">წაშლა</button>
+        </td>
+      </tr>
+    </tbody>
+    <thead>
+      <tr>
+        <th class="task-status">
+          <img
+            src="../assets/images/done_all_FILL0_wght400_GRAD0_opsz24 1.png"
+          />
+          <p style="margin-left: 10px">დასრულებული დავალებები</p>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        [ngStyle]="{
+          'border-radius':
+            index === completeTaskArray.length - 1
+              ? '0px 0px 50px 50px'
+              : '0px',
+          'border-bottom': index === completeTaskArray.length - 1 ? 'none' : ''
+        }"
+        class="table-row"
+        *ngFor="let task of completeTaskArray; let index = index"
+      >
+        <td>{{ task.taskName }}</td>
+        <td style="color: #8ff4db">{{ task.taskStatus.split(" ")[0] }}</td>
+        <td class="buttons-box">
+          <div
+            class="edit-box"
+            [style.background]="changeColor(task.id)"
+            (click)="editTask(task.id)"
+          >
+            <img src="../assets/images/edit_FILL0_wght400_GRAD0_opsz24 1.png" />
+          </div>
+          <button class="addbutton" (click)="deleteTask(task.id)">წაშლა</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
